@@ -1,4 +1,5 @@
 import java.util.Map;
+import java.io.*;
 
 class Song {
   StringDict info;
@@ -7,43 +8,13 @@ class Song {
 
   Song(File f) {
     if (f.isFile()) {
-    // java.io.File
-    File drop = f.file();
-    println("\nisDirectory ? "+drop.isDirectory()+"  /  isFile ? "+drop.isFile());
-
-    if (drop.isFile()) {
-      // via http://wiki.processing.org/w/Listing_files
-      // list the files in the data folder, passing the filter as parameter
-      String[] filenames = drop.list(mp3Filter);
-      // unnecessarily verbose!
-      println(split(drop.toString(), '.')[split(drop.toString(), '.').length-1]);
-      // here's the idea
-      // probably going to throw an exception from the Song class,
-      // catch the exception in the main
-      try {
-        if (drop.toString().toLowerCase().endsWith(".mp3")) {
-          Song s = new Song(drop);
-          println(s.get("title"));
-        } 
-        else {
-          println("Song not created.");
-          throw new Exception("ERROR: File must be an .mp3");
-        }
-      } 
-      catch (Exception e) {
-        println(e.getMessage());
-      }
-
-      // get and display the number of jpg files
-      println(filenames.length + " mp3 files in specified directory");
-
-      // display the filenames
-      for (int i = 0; i < filenames.length; i++) {
-        println(filenames[i]);
+      boolean isMP3 = extension(f).equals("mp3");
+      if (!isMP3) { 
+        throw new Error("ERROR: File must be an .mp3");
       }
     }
 
-    if (drop.isDirectory()) { // this way we know it's a directory
+    if (f.isDirectory()) { // this way we know it's a directory
       /*
       println("listing the directory");
        // list the directory, not recursive, with the File api. returns File[].
@@ -59,7 +30,7 @@ class Song {
 
       // via http://wiki.processing.org/w/Listing_files
       // list the files in the data folder, passing the filter as parameter
-      String[] filenames = drop.list(mp3Filter);
+      String[] filenames = f.list(mp3Filter);
 
       // get and display the number of jpg files
       println(filenames.length + " mp3 files in specified directory");
@@ -69,7 +40,7 @@ class Song {
         println(filenames[i]);
       }
     }
-  }
+
     String fname = f.toString();
     mp3 = minim.loadFile(fname);
     meta = mp3.getMetaData();
@@ -83,12 +54,19 @@ class Song {
     return info.get(query);
   }
 
+  ///////////////////////
+  // helpers and so on //
+  ///////////////////////
 
-  // let's set a filter (which returns true if file's extension is .jpg)
-  FilenameFilter mp3Filter = new java.io.FilenameFilter() {
-    boolean accept(File dir, String name) {
-      return name.toLowerCase().endsWith(".mp3");
+  String extension(File f) {
+    String fname = f.toString();
+    String ext = "";
+    int i = fname.lastIndexOf('.');
+    int p = Math.max(fname.lastIndexOf('/'), fname.lastIndexOf('\\'));
+    if (i > p) {
+      ext = fname.substring(i+1);
     }
-  };
+    return ext.toLowerCase();
+  }
 }
 
