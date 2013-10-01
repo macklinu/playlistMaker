@@ -34,7 +34,7 @@ void dropEvent(DropEvent d) {
       // catch the exception in the main
       try {
         if (drop.toString().toLowerCase().endsWith(".mp3")) {
-          Song s = new Song(loadfile(drop));
+          Song s = new Song(drop);
         } 
         else {
           println("Song not created.");
@@ -89,10 +89,4 @@ FilenameFilter mp3Filter = new java.io.FilenameFilter() {
     return name.toLowerCase().endsWith(".mp3");
   }
 };
-
-// retrieving metadat from audio file
-AudioMetaData loadfile(File f) {
-  String fname = f.toString();
-  return minim.loadFile(fname).getMetaData();
-}
 
