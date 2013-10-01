@@ -4,8 +4,6 @@ import ddf.minim.*;
 
 SDrop drop;
 Minim minim;
-AudioPlayer mp3;
-AudioMetaData meta;
 
 void setup() {
   drop = new SDrop(this);
@@ -92,10 +90,9 @@ FilenameFilter mp3Filter = new java.io.FilenameFilter() {
   }
 };
 
+// retrieving metadat from audio file
 AudioMetaData loadfile(File f) {
   String fname = f.toString();
-  mp3 = minim.loadFile(fname);
-  meta = mp3.getMetaData();
-  return meta;
+  return minim.loadFile(fname).getMetaData();
 }
 
