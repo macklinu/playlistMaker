@@ -34,6 +34,8 @@ void dropEvent(DropEvent d) {
           for (File f : filenames) {
             addSongToQueue(f);
           }
+        } else {
+          println("No mp3s in that folder... try again.");
         }
       } 
       else { // only one file was dropped
