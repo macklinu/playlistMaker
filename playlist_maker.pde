@@ -30,17 +30,15 @@ void dropEvent(DropEvent d) {
         if (filenames.length > 0) {
           println("");
           println(filenames.length + " mp3 files in specified directory");
+          // add each mp3 to queue
           for (File f : filenames) {
-            String fname = f.toString();
-            queue.add(new Song(f));
-            println("# of songs in queue: " + queue.size());
+            addSongToQueue(f);
           }
         }
       } 
       else { // only one file was dropped
         if (extension(file).equals("mp3")) {
-          queue.add(new Song(file));
-          println("# of songs in queue: " + queue.size());
+          addSongToQueue(file);
         } 
         else {
           println("didn't make a song on that drop... need an mp3");
@@ -51,6 +49,11 @@ void dropEvent(DropEvent d) {
   catch (Error e) {
     println(e.getMessage());
   }
+}
+
+void addSongToQueue(File f) {
+  queue.add(new Song(f));
+  println("# of songs in queue: " + queue.size());
 }
 
 // a filter that returns true if file's extension is .mp3
