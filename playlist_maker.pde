@@ -4,13 +4,14 @@ import ddf.minim.*;
 SDrop drop;
 Minim minim;
 
-ArrayList<Song> queue;
+// Custom classes
+Queue queue;
 
 void setup() {
   drop = new SDrop(this);
   minim = new Minim(this);
 
-  queue = new ArrayList<Song>();
+  queue = new Queue();
 }
 
 void draw() {
@@ -32,7 +33,7 @@ void dropEvent(DropEvent d) {
           println(filenames.length + " mp3 files in specified directory");
           // add each mp3 to queue
           for (File f : filenames) {
-            addSongToQueue(f);
+            queue.add(f);
           }
         } else {
           println("No mp3s in that folder... try again.");
@@ -40,7 +41,7 @@ void dropEvent(DropEvent d) {
       } 
       else { // only one file was dropped
         if (extension(file).equals("mp3")) {
-          addSongToQueue(file);
+          queue.add(file);
         } 
         else {
           println("didn't make a song on that drop... need an mp3");
@@ -51,11 +52,6 @@ void dropEvent(DropEvent d) {
   catch (Error e) {
     println(e.getMessage());
   }
-}
-
-void addSongToQueue(File f) {
-  queue.add(new Song(f));
-  println("# of songs in queue: " + queue.size());
 }
 
 // a filter that returns true if file's extension is .mp3
