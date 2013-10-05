@@ -1,35 +1,51 @@
 import java.util.Map;
 import java.io.*;
+import ddf.minim.*;
 
 class Song {
-  AudioPlayer mp3;
   AudioMetaData meta;
+  SongView view;
+
+  JSONObject info;
+  String path, fname;
 
   Song(File f) {
     println("incoming file: " + f);
-    boolean isMP3 = extension(f).equals("mp3");
-    if (!isMP3) { 
-      throw new Error("ERROR: File must be an .mp3");
-    }
-    String fname = f.toString();
-    mp3 = minim.loadFile(fname);
-    meta = mp3.getMetaData();
+    fname = f.getName();
+    path = f.getPath();
+    meta = new Minim(playlistMaker.this)
+      .loadFile(path)
+        .getMetaData();
     println("made a song");
+    view = new SongView(this);
+    createJSONObject();
+  }
+
+  private void createJSONObject() {
+    info = new JSONObject();
+    // title
+    String _title = meta.title().equals("") 
+      ? this.fname // true: filename.mp3
+      : meta.title(); // false: title tag
+    String _author = meta.author().equals("") 
+      ? "[unknown]" // true: blank
+      : meta.author(); // false: author tag
+    String _album = meta.album().equals("") 
+      ? "" // true: blank
+      : meta.album(); // false: album tag
+    String _date = meta.date().toString().equals("") 
+      ? "" // true: blank
+      : meta.date(); // false: date tag
+    // write everything to a JSON object
+    info.setString("title", _title);
+    info.setString("artist", _author);
+    info.setString("album", _album);
+    info.setString("date", _date);
+    println(info.toString());
   }
 
   ///////////////////////
   // helpers and so on //
   ///////////////////////
-
-  String extension(File f) {
-    String fname = f.toString();
-    String ext = "";
-    int i = fname.lastIndexOf('.');
-    int p = Math.max(fname.lastIndexOf('/'), fname.lastIndexOf('\\'));
-    if (i > p) {
-      ext = fname.substring(i+1);
-    }
-    return ext.toLowerCase();
-  }
 }
 

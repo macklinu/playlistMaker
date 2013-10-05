@@ -1,20 +1,25 @@
+import de.looksgood.ani.*;
+import de.looksgood.ani.easing.*;
 import sojamo.drop.*;
-import ddf.minim.*;
+
 
 SDrop drop;
-Minim minim;
 
 // Custom classes
 Queue queue;
 
+int bg = 0;
+
 void setup() {
+  size(300, 300);
   drop = new SDrop(this);
-  minim = new Minim(this);
+  Ani.init(this);
 
   queue = new Queue();
 }
 
 void draw() {
+  background(bg);
 }
 
 ////////////
@@ -35,13 +40,16 @@ void dropEvent(DropEvent d) {
           for (File f : filenames) {
             queue.add(f);
           }
-        } else {
+        } 
+        else {
           println("No mp3s in that folder... try again.");
         }
       } 
       else { // only one file was dropped
         if (extension(file).equals("mp3")) {
           queue.add(file);
+          Ani.to(this, 1.0, "bg", random(255));
+          
         } 
         else {
           println("didn't make a song on that drop... need an mp3");
